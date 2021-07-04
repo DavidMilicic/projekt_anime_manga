@@ -6,7 +6,7 @@
     >
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Anime & Manga search</v-toolbar-title> 
+      <v-toolbar-title>Anime and Manga search</v-toolbar-title> 
 
       <v-spacer></v-spacer>
 
@@ -34,5 +34,8 @@ export default {
 
 <style lang="scss" scoped>
 main {
+  background-image: url('assets/animegifwallpaper.gif');
+  background-size: auto;
+  background-attachment: fixed;
 }
 </style>
