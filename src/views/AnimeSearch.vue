@@ -64,7 +64,7 @@ export default {
   methods: {
 
     getAnimes() {
-      let api = "https://api.jikan.moe/v3/search/anime?";
+      let api = "https://api.jikan.moe/v3/search/anime?" + 'q' + "&page=1&genre=12,33,34&genre_exclude=0";
       this.axios
         .get(api, {
           params: {
@@ -87,14 +87,10 @@ export default {
   },
 
   watch: {
-    page: function () {
-      this.getAnimes();
-    },
     search(val) {
       if (!val) {
         return;
       }
-
       this.isLoading = true;
       this.fetchEntriesDebounced();
     },

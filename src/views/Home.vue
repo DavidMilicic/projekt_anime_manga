@@ -28,6 +28,13 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row>
+      <v-pagination
+        v-model="page"
+        :length="totalAnimes / perPage"
+        circle
+      ></v-pagination>
+    </v-row>
   </v-container>
 </template>
 
@@ -64,7 +71,6 @@ export default {
           this.isLoading = false;
         });
     },
-
   },
 
   watch: {
