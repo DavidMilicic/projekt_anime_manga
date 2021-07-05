@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row justify="center">
       <v-col cols="12" sm="12" md="12" lg="12">
         <div class="topAnimes">Top 50 animes right now</div>
       </v-col>
@@ -17,7 +17,7 @@
 
         <!-- Opis za svaki anime -->
 
-        <v-card color="grey" height="200">
+        <v-card color="grey" height="auto">
           <div class="card">{{ anime.title }}</div>
           <div class="cardText">
             Number of episodes: {{ anime.episodes }} <br />
@@ -98,7 +98,6 @@ export default {
   max-width: 225px;
   margin-left: auto;
   margin-right: auto;
-  transition: 0.4s;
 }
 
 .card {
