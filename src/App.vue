@@ -1,12 +1,9 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar
-      app
-      shrink-on-scroll
-    >
+    <v-app-bar app shrink-on-scroll>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Anime and Manga search</v-toolbar-title> 
+      <v-toolbar-title>Anime and Manga search</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -16,26 +13,42 @@
     </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <router-view />
     </v-main>
   </v-app>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
+  name: "App",
 
   data: () => ({
-    //
+    links: [
+      {
+        text: "Home",
+        path: "/",
+      },
+      {
+        text: "Manga",
+        path: "/manga",
+      },
+      {
+        text: "Contact",
+        path: "/contact",
+      },
+      {
+        text: "AnimeSearch",
+        path: "/animeSearch",
+      },
+    ],
   }),
 };
 </script>
 
 <style lang="scss" scoped>
 main {
-  background-image: url('assets/animegifwallpaper.gif');
-  background-size: auto;
+  background-image: url("assets/animegifwallpaper.gif");
+  background-size: 100% 100%;
   background-attachment: fixed;
 }
 </style>

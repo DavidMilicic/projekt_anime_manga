@@ -2,11 +2,27 @@
   <v-container>
     <v-row>
       <v-col cols="12" sm="12" md="12" lg="12">
-        <div class="topAnimes">Top 50 animes right now</div>
+        <!-- Razdvaja ova 3 retka -->
+        <div class="searchAnime">Search for anime:</div>
       </v-col>
 
-      <v-col v-for="anime in animeTop" :key="anime.rank" cols="12" md="4">
-        <!-- Da prikaze top anime po ranku -->
+      <!-- Search box -->
+
+      <v-col cols="12" sm="12" md="12" lg="12">
+        <v-text-field
+          append-icon="mdi-magnify"
+          dark
+          filled
+          label="Type here..."
+          placeholder="Bleach, Naruto, Dragon Ball, etc."
+          v-model="search"
+          :loading="isLoading"
+          @submit.prevent="search"
+        ></v-text-field>
+      </v-col>
+
+      <v-col v-for="anime in animeSearched" :key="anime.mal_id" cols="12" md="4">
+        <!-- Da prikaze anime po iID -->
 
         <!-- Slika za svaki anime -->
         <div class="image">
@@ -37,39 +53,50 @@ export default {
 
   data() {
     return {
-      animeTop: [],
+      animeSearched: [],
       page: 1,
-      totalTopAnimes: 0,
       perPage: 50,
+      search: "",
+      isLoading: false,
     };
   },
 
-  created() {
-    this.getTopAnime();
-  },
-
   methods: {
-    getTopAnime() {
-      let api = "https://api.jikan.moe/v3/top/anime";
+
+    getAnimes() {
+      let api = "https://api.jikan.moe/v3/search/anime?";
       this.axios
         .get(api, {
           params: {
-            offset: this.perPage * (this.page - 1),
+            'q': this.search
           },
         })
         .then((response) => {
+          this.animeSearched = response.data.results;
           console.log(response.data);
-          this.animeTop = response.data.top;
-          this.totalTopAnimes = response.data.request_cache_expiry;
           this.isLoading = false;
         });
     },
 
+    fetchEntriesDebounced() {
+      clearTimeout(this._searchTimerId);
+      this._searchTimerId = setTimeout(() => {
+        this.getAnimes();
+      }, 500);
+    },
   },
 
   watch: {
     page: function () {
-      this.getTopAnime();
+      this.getAnimes();
+    },
+    search(val) {
+      if (!val) {
+        return;
+      }
+
+      this.isLoading = true;
+      this.fetchEntriesDebounced();
     },
   },
 };
@@ -79,6 +106,16 @@ export default {
 .topAnimes {
   text-align: center;
   text-transform: uppercase;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 40px;
+  color: white;
+  background: rgba(200, 200, 200, 0.7);
+  border-radius: 25px;
+}
+
+.searchAnime {
+  text-align: center;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   font-size: 40px;
