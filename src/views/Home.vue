@@ -1,19 +1,20 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col cols="12" sm="12" md="12" lg="12">
+
+      <v-col cols="12">
         <div class="topAnimes">Top 50 animes right now</div>
       </v-col>
 
       <v-col v-for="anime in animeTop" :key="anime.rank" cols="12" md="4">
 
         <div class="image">
-          <a :href="anime.url">
+          <a :href="anime.url" target="_blank">
             <img :src="anime.image_url" />
           </a>
         </div>
 
-        <anime-cards :anime="anime"></anime-cards>
+        <top-anime-cards :anime="anime"></top-anime-cards>
 
       </v-col>
     </v-row>
@@ -21,9 +22,9 @@
 </template>
 
 <script>
-import AnimeCards from '../components/AnimeCards.vue';
+import TopAnimeCards from '../components/TopAnimeCards.vue';
 export default {
-  components: { AnimeCards },
+  components: { TopAnimeCards },
   name: "Home",
 
   data() {

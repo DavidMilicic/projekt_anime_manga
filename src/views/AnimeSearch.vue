@@ -1,11 +1,11 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col cols="12" sm="12" md="12" lg="12">
+      <v-col cols="12">
         <div class="searchAnime">Search for anime:</div>
       </v-col>
 
-      <v-col cols="12" sm="12" md="12" lg="12">
+      <v-col cols="12">
         <v-text-field
           append-icon="mdi-magnify"
           dark
@@ -16,6 +16,7 @@
           :loading="isLoading"
           @submit.prevent="search"
           clearable
+          :rules="inputRules"
         ></v-text-field>
       </v-col>
 
@@ -26,7 +27,7 @@
         md="4"
       >
         <div class="image">
-          <a :href="anime.url">
+          <a :href="anime.url" target="_blank">
             <img :src="anime.image_url" />
           </a>
         </div>
@@ -35,20 +36,20 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-if="totalAnimes > 1 " cols="12" sm="12" md="12" lg="12">
-      <v-pagination
-        :total-visible="7"
-        v-model="page"
-        :length="Math.ceil(totalAnimes)"
-        circle
-      ></v-pagination>
+      <v-col v-if="totalAnimes > 1" cols="12">
+        <v-pagination
+          :total-visible="7"
+          v-model="page"
+          :length="Math.ceil(totalAnimes)"
+          circle
+        ></v-pagination>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import AnimeCards from '../components/AnimeCards.vue'
+import AnimeCards from "../components/AnimeCards.vue";
 
 export default {
   components: { AnimeCards },
@@ -61,19 +62,20 @@ export default {
       search: "",
       isLoading: false,
       totalAnimes: 1,
+      inputRules: [(v) => v.length >= 3 || "Minimum 3 characters!"],
     };
   },
 
   methods: {
-
     getAnimes() {
-      let api = "https://api.jikan.moe/v3/search/anime?" + "&genre=9,12,33,34&genre_exclude=0";
+      let api =
+        "https://api.jikan.moe/v3/search/anime?" +
+        "&genre=9,12,33,34&genre_exclude=0";
       this.axios
         .get(api, {
           params: {
-            "q": this.search,
-            "page": this.page,
-            
+            q: this.search,
+            page: this.page,
           },
         })
         .then((response) => {
@@ -91,15 +93,14 @@ export default {
       }, 750);
     },
 
-    searchEntries(){
-      this.animeSearched = []
-      this.page = 1
-      this.fetchEntriesDebounced()
-    }
+    searchEntries() {
+      this.animeSearched = [];
+      this.page = 1;
+      this.fetchEntriesDebounced();
+    },
   },
 
   watch: {
-
     page: function () {
       this.getAnimes();
       window.scrollTo(0, 0);
@@ -133,5 +134,4 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
-
 </style>

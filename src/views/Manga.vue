@@ -1,11 +1,11 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col cols="12" sm="12" md="12" lg="12">
+      <v-col cols="12">
         <div class="searchManga">Search for manga:</div>
       </v-col>
 
-      <v-col cols="12" sm="12" md="12" lg="12">
+      <v-col cols="12">
         <v-text-field
           append-icon="mdi-magnify"
           dark
@@ -16,6 +16,7 @@
           :loading="isLoading"
           @submit.prevent="search"
           clearable
+          :rules="inputRules"
         ></v-text-field>
       </v-col>
 
@@ -26,7 +27,7 @@
         md="4"
       >
         <div class="image">
-          <a :href="manga.url">
+          <a :href="manga.url" target="_blank">
             <img :src="manga.image_url" />
           </a>
         </div>
@@ -35,7 +36,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-if="totalManga > 1" cols="12" sm="12" md="12" lg="12">
+      <v-col v-if="totalManga > 1" cols="12">
         <v-pagination
           :total-visible="7"
           v-model="page"
@@ -59,6 +60,7 @@ export default {
       search: "",
       isLoading: false,
       totalManga: 1,
+      inputRules: [(v) => v.length >= 3 || "Minimum 3 characters!"],
     };
   },
 
