@@ -6,48 +6,30 @@
       </v-col>
 
       <v-col v-for="anime in animeTop" :key="anime.rank" cols="12" md="4">
-        <!-- Da prikaze top anime po ranku -->
 
-        <!-- Slika za svaki anime -->
         <div class="image">
           <a :href="anime.url">
             <img :src="anime.image_url" />
           </a>
         </div>
 
-        <!-- Opis za svaki anime -->
+        <anime-cards :anime="anime"></anime-cards>
 
-        <v-card color="grey" height="auto">
-          <div class="card">{{ anime.title }}</div>
-          <div class="cardText">
-            Number of episodes: {{ anime.episodes }} <br />
-            Aired from: {{ anime.start_date }} to {{ anime.end_date }} <br />
-            Type: {{ anime.type }} <br />
-            Score: {{ anime.score }}
-          </div>
-        </v-card>
       </v-col>
-    </v-row>
-    <v-row>
-      <v-pagination
-        v-model="page"
-        :length="totalAnimes / perPage"
-        circle
-      ></v-pagination>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import AnimeCards from '../components/AnimeCards.vue';
 export default {
+  components: { AnimeCards },
   name: "Home",
 
   data() {
     return {
       animeTop: [],
-      page: 1,
-      totalTopAnimes: 0,
-      perPage: 50,
+      totalTopAnimes: 1,
     };
   },
 
@@ -59,11 +41,7 @@ export default {
     getTopAnime() {
       let api = "https://api.jikan.moe/v3/top/anime";
       this.axios
-        .get(api, {
-          params: {
-            offset: this.perPage * (this.page - 1),
-          },
-        })
+        .get(api)
         .then((response) => {
           console.log(response.data);
           this.animeTop = response.data.top;
@@ -73,11 +51,6 @@ export default {
     },
   },
 
-  watch: {
-    page: function () {
-      this.getTopAnime();
-    },
-  },
 };
 </script>
 
@@ -98,15 +71,5 @@ export default {
   max-width: 225px;
   margin-left: auto;
   margin-right: auto;
-}
-
-.card {
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.cardText {
-  font-size: 20px;
 }
 </style>

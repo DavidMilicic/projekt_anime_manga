@@ -2,11 +2,8 @@
   <v-container>
     <v-row justify="center">
       <v-col cols="12" sm="12" md="12" lg="12">
-        <!-- Razdvaja ova 3 retka -->
         <div class="searchManga">Search for manga:</div>
       </v-col>
-
-      <!-- Search box -->
 
       <v-col cols="12" sm="12" md="12" lg="12">
         <v-text-field
@@ -22,59 +19,65 @@
         ></v-text-field>
       </v-col>
 
-      <v-col v-for="manga in mangaSearched" :key="manga.mal_id" cols="12" md="4">
-        <!-- Da prikaze mange po iID -->
-
-        <!-- Slika za svaku mangu -->
+      <v-col
+        v-for="manga in mangaSearched"
+        :key="manga.mal_id"
+        cols="12"
+        md="4"
+      >
         <div class="image">
           <a :href="manga.url">
             <img :src="manga.image_url" />
           </a>
         </div>
 
-        <!-- Opis za svaku mangu -->
-
-        <v-card color="grey" height="auto">
-          <div class="card">{{ manga.title }}</div>
-          <div class="cardText">
-            Number of episodes: {{ manga.episodes }} <br />
-            Started: {{ manga.start_date }} | Ended: {{ manga.end_date }} <br />
-            Type: {{ manga.type }} <br />
-            Score: {{ manga.score }} <br />
-            Description: {{ manga.synopsis }}
-          </div>
-        </v-card>
+        <manga-cards :manga="manga"></manga-cards>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col v-if="totalManga > 1" cols="12" sm="12" md="12" lg="12">
+        <v-pagination
+          :total-visible="7"
+          v-model="page"
+          :length="Math.ceil(totalManga)"
+          circle
+        ></v-pagination>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import MangaCards from "../components/MangaCards.vue";
 export default {
-  name: "Home",
+  components: { MangaCards },
 
   data() {
     return {
       mangaSearched: [],
       page: 1,
-      perPage: 50,
       search: "",
       isLoading: false,
+      totalManga: 1,
     };
   },
 
   methods: {
-
     getManga() {
-      let api = "https://api.jikan.moe/v3/search/manga?" + 'q' + "&page=1&genre=9,12,33,34&genre_exclude=0"; //da filtera NSFW
+      let api =
+        "https://api.jikan.moe/v3/search/manga?" +
+        "q" +
+        "&genre=9,12,33,34&genre_exclude=0";
       this.axios
         .get(api, {
           params: {
-            'q': this.search
+            q: this.search,
+            page: this.page,
           },
         })
         .then((response) => {
           this.mangaSearched = response.data.results;
+          this.totalManga = response.data.last_page;
           console.log(response.data);
           this.isLoading = false;
         });
@@ -86,15 +89,25 @@ export default {
         this.getManga();
       }, 500);
     },
+    searchEntries() {
+      this.animeSearched = [];
+      this.page = 1;
+      this.fetchEntriesDebounced();
+    },
   },
 
   watch: {
+    page: function () {
+      this.getManga();
+      window.scrollTo(0, 0);
+    },
+
     search(val) {
       if (!val) {
         return;
       }
       this.isLoading = true;
-      this.fetchEntriesDebounced();
+      this.searchEntries();
     },
   },
 };
@@ -117,15 +130,5 @@ export default {
   object-fit: cover;
   margin-left: auto;
   margin-right: auto;
-}
-
-.card {
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.cardText {
-  font-size: 20px;
 }
 </style>
